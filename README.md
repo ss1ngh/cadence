@@ -2,35 +2,33 @@ a distributed, high-performance background job processing system built with **Bu
 
 ## What it does
 
-1. **Producer (API)**: Exposes a `/submit` endpoint to accept JSON payloads. It pushes these tasks onto a Redis queue.
+1. **Producer (API)**: Exposes a `/submit` endpoint to accept JSON payloads.It pushes these tasks safely onto a Redis queue.
 2. **Consumer (Worker)**: A decoupled background process that constantly listens to the queue, executes the heavy work based on job types, and handles automated retries and exponential backoffs.
 3. **Admin Dashboard**: A secure Express-based GUI to visually orchestrate queues, view payloads, and manage stalled jobs.
 4. **Real-time Feedback**: Streams job completion and failure events directly back to clients via live WebSockets.
 
 ---
 
-## 🏗 Architecture Diagram
+## Architecture Diagram
 
 ```mermaid
 graph TD
     Client(Client App / Postman)
 
-    subgraph
-        subgraph API_Node [API Gateway]
-            API[Bun HTTP API]
-            ZOD[Zod Validation]
-            WSS[WebSocket Server]
-        end
+    subgraph API_Node [API Gateway]
+        API[Bun HTTP API]
+        ZOD[Zod Validation]
+        WSS[WebSocket Server]
+    end
 
-        subgraph Queue_DB [Queue & Database]
-            BullMQ[BullMQ Job Queue]
-            Redis[(Redis Database)]
-        end
+    subgraph Queue_DB [Queue & Database]
+        BullMQ[BullMQ Job Queue]
+        Redis[(Redis Database)]
+    end
 
-        subgraph Workers_Admin [Compute & Admin]
-            Worker[Background Worker Node]
-            Dash[Admin Dashboard Express / Bull-Board]
-        end
+    subgraph Workers_Admin [Compute & Admin]
+        Worker[Background Worker Node]
+        Dash[Admin Dashboard Express / Bull-Board]
     end
 
     %% Connections
@@ -61,6 +59,7 @@ graph TD
 - **Database**: [Redis](https://redis.io/)
 - **Web Frameworks**: `Bun.serve` (API) & [Express.js](https://expressjs.com/) (Dashboard)
 - **Monitoring UI**: [@bull-board](https://github.com/felixmosh/bull-board)
+
 ---
 
 ## 📂 Folder Structure
@@ -86,7 +85,7 @@ cadence/
 
 ---
 
-## Project Setup
+## Project Setup Protocol
 
 ### 1. Prerequisites
 
@@ -95,7 +94,7 @@ cadence/
 
 ### 2. Installation
 
-Clone the repository, duplicate the environment variables, and install dependencies:
+Clone the repository, duplicate the environment variables, and ```npm install``` dependencies:
 
 ```bash
 # Install dependencies
@@ -113,7 +112,7 @@ relies on Redis to manage queues. Spin up the localized Redis node:
 docker-compose up -d
 ```
 
-### 4. Run the Nodes
+### 4. Run the Nodes!
 
 you can run these in three separate terminal windows to emulate a microservice architecture.
 
@@ -131,14 +130,14 @@ cd worker
 bun run index.ts
 ```
 
-**Terminal 3 (The Dashboard):**
+**Terminal 3 (The Admin Dashboard):**
 
 ```bash
 cd dashboard
 bun run index.ts
 ```
 
-Now, go to **`http://localhost:3001/ui`** to view your live queue operations, or `POST` to **`http://localhost:3000/submit`** to enqueue a job!
+Now, visit **`http://localhost:3001/ui`** to view your live queue operations, or send a `POST` request to **`http://localhost:3000/submit`** to enqueue a job!
 
 ---
 
