@@ -19,22 +19,39 @@ const worker = new Worker<JobData>(
 
     switch (job.data.type) {
       case "VIDEO_TRANSCODE":
+        await job.log(`Processing video: ${job.data.data.fileUrl}`);
+        await job.log(`Target resolution: ${job.data.data.resolution}`);
         console.log(`Processing video: ${job.data.data.fileUrl}`);
-        console.log(`Target resolution: ${job.data.data.resolution}`);
-        //simulate heavy work for 3 seconds
-        await new Promise((res) => setTimeout(res, 3000));
+        //simulate heavy work with progress updates
+        await job.updateProgress(33);
+        await new Promise((res) => setTimeout(res, 1000));
+        await job.updateProgress(66);
+        await new Promise((res) => setTimeout(res, 1000));
+        await job.updateProgress(100);
+        await new Promise((res) => setTimeout(res, 1000));
+        await job.log("video transcoding completed");
         console.log("video transcoding completed");
         break;
 
       case "GENERATE_REPORT":
+        await job.log(`Generating report for User: ${job.data.data.userId}`);
         console.log(`Generating report for User: ${job.data.data.userId}`);
-        await new Promise((res) => setTimeout(res, 3000));
+        await job.updateProgress(50);
+        await new Promise((res) => setTimeout(res, 1500));
+        await job.updateProgress(100);
+        await new Promise((res) => setTimeout(res, 1500));
+        await job.log("Report has been generated!");
         console.log("Report has been generated!");
         break;
 
       case "SEND_BULK_EMAIL":
+        await job.log(`Sending emails for template: ${job.data.data.templateId}`);
         console.log(`Sending emails for template: ${job.data.data.templateId}`);
-        await new Promise((res) => setTimeout(res, 3000));
+        await job.updateProgress(50);
+        await new Promise((res) => setTimeout(res, 1500));
+        await job.updateProgress(100);
+        await new Promise((res) => setTimeout(res, 1500));
+        await job.log("All Emails sent!");
         console.log("All Emails sent!");
         break;
 
