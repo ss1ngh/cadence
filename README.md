@@ -15,7 +15,7 @@ a distributed, high-performance background job processing system built with **Bu
 graph TD
     Client(Client App / Postman)
 
-    subgraph Cadence Ecosystem
+    subgraph
         subgraph API_Node [API Gateway]
             API[Bun HTTP API]
             ZOD[Zod Validation]
