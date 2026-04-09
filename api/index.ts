@@ -58,7 +58,17 @@ Bun.serve<WebSocketData>({
 
     if (req.method === "POST" && url.pathname === "/submit") {
       try {
-        const data = (await req.json()) as JobData;
+        const rawJson = await req.json();
+        const parsed = JobDataSchema.safeParse(rawJson);
+        
+        if (!parsed.success) {
+          return new Response(JSON.stringify({ error: "Invalid payload", details: parsed.error.issues }), {
+            status: 400,
+            headers: { "Content-Type": "application/json" }
+          });
+        }
+        
+        const data = parsed.data;
 
         const job = await taskQueue.add("process-task", data, {
           attempts: 3,
