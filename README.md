@@ -34,21 +34,21 @@ graph TD
     end
 
     %% Connections
-    Client -- "POST /submit payload" --> API
+    Client -->|POST /submit payload| API
     API --> ZOD
-    ZOD -- "Valid Payload" --> BullMQ
-    ZOD -- "HTTP 400 Invalid" -.-> Client
+    ZOD -->|Valid Payload| BullMQ
+    ZOD -.->|HTTP 400 Invalid| Client
 
-    BullMQ -. "Stores State & Data" .-> Redis
+    BullMQ -.->|Stores State & Data| Redis
 
-    BullMQ -- "Dispatches job" --> Worker
-    Worker -- "Executes job & Logs progress" --> BullMQ
-    Worker -- "Reports Complete/Failed" --> BullMQ
+    BullMQ -->|Dispatches job| Worker
+    Worker -->|Executes job & Logs progress| BullMQ
+    Worker -->|Reports Complete/Failed| BullMQ
 
-    Dash -- "Reads Status & Logs" --> BullMQ
+    Dash -->|Reads Status & Logs| BullMQ
 
-    BullMQ -- "Pub/Sub Events via Redis" --> WSS
-    WSS -- "Real-time updates via WebSockets" --> Client
+    BullMQ -->|Pub/Sub Events via Redis| WSS
+    WSS -->|Real-time updates via WebSockets| Client
 ```
 
 ---
