@@ -4,8 +4,9 @@ import { BullMQAdapter } from "@bull-board/api/bullMQAdapter";
 import { ExpressAdapter } from "@bull-board/express";
 import { Queue } from "bullmq";
 import IORedis from "ioredis";
+import { config } from "../shared/env";
 
-const connection = new IORedis({ host: "127.0.0.1", port: 6379 });
+const connection = new IORedis({ host: config.REDIS_HOST, port: config.REDIS_PORT });
 const taskQueue = new Queue("main-task-queue", { connection });
 
 const serverAdapter = new ExpressAdapter();
@@ -19,6 +20,6 @@ createBullBoard({
 const app = express();
 app.use("/ui", serverAdapter.getRouter());
 
-app.listen(3001, () => {
-  console.log("Admin Dashboard running on http://localhost:3001/ui");
+app.listen(config.DASHBOARD_PORT, () => {
+  console.log(`Admin Dashboard running on http://localhost:${config.DASHBOARD_PORT}/ui`);
 });

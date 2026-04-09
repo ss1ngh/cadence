@@ -1,11 +1,12 @@
 import { Worker, Job } from "bullmq";
 import IORedis from "ioredis";
 import type { JobData } from "../shared/types";
+import { config } from "../shared/env";
 
 //establish connection to redis
 const connection = new IORedis({
-  host: "127.0.0.1",
-  port: 6379,
+  host: config.REDIS_HOST,
+  port: config.REDIS_PORT,
   maxRetriesPerRequest: null,
 });
 
@@ -27,13 +28,13 @@ const worker = new Worker<JobData>(
 
       case "GENERATE_REPORT":
         console.log(`Generating report for User: ${job.data.data.userId}`);
-        await new Promise((res) => setTimeout(res, 2000));
+        await new Promise((res) => setTimeout(res, 3000));
         console.log("Report has been generated!");
         break;
 
       case "SEND_BULK_EMAIL":
         console.log(`Sending emails for template: ${job.data.data.templateId}`);
-        await new Promise((res) => setTimeout(res, 1000));
+        await new Promise((res) => setTimeout(res, 3000));
         console.log("All Emails sent!");
         break;
 

@@ -1,11 +1,13 @@
 import { Queue, QueueEvents } from "bullmq";
 import IORedis from "ioredis";
 import type { JobData } from "../shared/types";
+import { config } from "../shared/env";
+import { JobDataSchema } from "../shared/schemas";
 
 //establish connection to docker redis container
 const connection = new IORedis({
-  host: "localhost",
-  port: 6379,
+  host: config.REDIS_HOST,
+  port: config.REDIS_PORT,
   maxRetriesPerRequest: null,
 });
 
@@ -40,7 +42,7 @@ type WebSocketData = {
 };
 
 Bun.serve<WebSocketData>({
-  port: 3000,
+  port: config.API_PORT,
 
   async fetch(req, server) {
     const url = new URL(req.url);
