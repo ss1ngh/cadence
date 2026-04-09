@@ -35,6 +35,7 @@ graph TD
 
     %% Connections
     Client -->|POST /submit payload| API
+    Client -->|Connects via /ws?jobId| WSS
     API --> ZOD
     ZOD -->|Valid Payload| BullMQ
     ZOD -.->|HTTP 400 Invalid| Client
