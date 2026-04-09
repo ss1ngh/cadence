@@ -1,8 +1,8 @@
 a distributed, high-performance background job processing system built with **Bun**, **Redis**, and **BullMQ**. It is designed to decouple heavy, long-running tasks from your main application by offloading them to scalable background workers.
 
-## 🌟 What it does
+## What it does
 
-1. **Producer (API)**: Exposes a `/submit` endpoint to accept strict, Zod-validated JSON payloads. It pushes these tasks safely onto a Redis queue.
+1. **Producer (API)**: Exposes a `/submit` endpoint to accept JSON payloads. It pushes these tasks onto a Redis queue.
 2. **Consumer (Worker)**: A decoupled background process that constantly listens to the queue, executes the heavy work based on job types, and handles automated retries and exponential backoffs.
 3. **Admin Dashboard**: A secure Express-based GUI to visually orchestrate queues, view payloads, and manage stalled jobs.
 4. **Real-time Feedback**: Streams job completion and failure events directly back to clients via live WebSockets.
@@ -59,11 +59,8 @@ graph TD
 - **Runtime**: [Bun](https://bun.sh/) (for the API and Worker) / Node.js
 - **Queue Engine**: [BullMQ](https://docs.bullmq.io/)
 - **Database**: [Redis](https://redis.io/)
-- **Validation**: [Zod](https://zod.dev/)
 - **Web Frameworks**: `Bun.serve` (API) & [Express.js](https://expressjs.com/) (Dashboard)
 - **Monitoring UI**: [@bull-board](https://github.com/felixmosh/bull-board)
-- **Language**: TypeScript (Strict typing with `z.infer`)
-
 ---
 
 ## 📂 Folder Structure
@@ -89,7 +86,7 @@ cadence/
 
 ---
 
-## 🚀 Project Setup Protocol
+## Project Setup
 
 ### 1. Prerequisites
 
@@ -110,15 +107,15 @@ cp .env.example .env
 
 ### 3. Start Redis Infrastructure
 
-Cadence relies on Redis to manage queues. Spin up the localized Redis node:
+relies on Redis to manage queues. Spin up the localized Redis node:
 
 ```bash
 docker-compose up -d
 ```
 
-### 4. Run the Nodes!
+### 4. Run the Nodes
 
-Since this is a distributed system, you can run these in three separate terminal windows to emulate a microservice architecture.
+you can run these in three separate terminal windows to emulate a microservice architecture.
 
 **Terminal 1 (The API):**
 
@@ -134,14 +131,14 @@ cd worker
 bun run index.ts
 ```
 
-**Terminal 3 (The Admin Dashboard):**
+**Terminal 3 (The Dashboard):**
 
 ```bash
 cd dashboard
 bun run index.ts
 ```
 
-Now, navigate securely to **`http://localhost:3001/ui`** to view your live queue operations, or securely `POST` to **`http://localhost:3000/submit`** to enqueue a job!
+Now, go to **`http://localhost:3001/ui`** to view your live queue operations, or `POST` to **`http://localhost:3000/submit`** to enqueue a job!
 
 ---
 
